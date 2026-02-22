@@ -1,0 +1,26 @@
+<h2>Teacher Login</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<script>
+function login() {
+  fetch("https://yourusername.pythonanywhere.com/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success){
+      localStorage.setItem("teacher_id", data.teacher_id);
+      window.location.href = "dashboard.html";
+    } else {
+      alert("Invalid Login");
+    }
+  });
+}
+</script>
