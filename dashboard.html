@@ -1,0 +1,31 @@
+<h2>Face Attendance</h2>
+
+<video id="video" width="400" autoplay></video>
+<button onclick="mark()">Mark Attendance</button>
+
+<script>
+const video = document.getElementById("video");
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => video.srcObject = stream);
+
+function mark(){
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d").drawImage(video, 0, 0);
+
+  const image = canvas.toDataURL("image/jpeg");
+
+  fetch("https://yourusername.pythonanywhere.com/mark_attendance", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      image: image,
+      teacher_id: localStorage.getItem("teacher_id")
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert(data.status));
+}
+</script>
